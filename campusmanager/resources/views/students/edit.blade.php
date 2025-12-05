@@ -1,19 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Student anlegen')
+@section('title', 'Student bearbeiten')
 
 @section('content')
-    <h2>Neuen Studenten anlegen</h2>
+    <h2>Student bearbeiten</h2>
 
     <x-flash />
     
-    <form action="{{ route('students.store') }}" method="post" novalidate>
+    <form action="{{ route('students.update', $student) }}" method="post" novalidate>
         @csrf
+        @method('PUT')
 
         <div class="form-row cols-2">
             <div class="form-group">
                 <label for="firstname">Vorname:</label>
-                <input type="text" name="firstname" id="firstname" value="{{ old('firstname') }}">
+                <input type="text" name="firstname" id="firstname" value="{{ old('firstname', $student->firstname) }}">
                 @error('firstname')
                     <span class="form-error">{!! __($message) !!}</span>
                 @enderror
@@ -21,7 +22,7 @@
 
             <div class="form-group">
                 <label for="lastname">Nachname:</label>
-                <input type="text" name="lastname" id="lastname" value="{{ old('lastname') }}">
+                <input type="text" name="lastname" id="lastname" value="{{ old('lastname', $student->lastname) }}">
                 @error('lastname')
                     <span class="form-error">{!! __($message) !!}</span>
                 @enderror
@@ -31,7 +32,7 @@
         <div class="form-row email-age-mat">
             <div class="form-group">
                 <label for="email">E-Mail-Adresse:</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}">
+                <input type="email" name="email" id="email" value="{{ old('email', $student->email) }}">
                 @error('email')
                     <span class="form-error">{!! __($message) !!}</span>
                 @enderror
@@ -39,7 +40,7 @@
             
             <div class="form-group">
                 <label for="age">Alter:</label>
-                <input type="number" name="age" id="age" value="{{ old('age') }}">
+                <input type="number" name="age" id="age" value="{{ old('age', $student->age) }}">
                 @error('age')
                     <span class="form-error">{!! __($message) !!}</span>
                 @enderror
@@ -47,7 +48,7 @@
             
             <div class="form-group">
                 <label for="matriculation_number">Matrikelnummer:</label>
-                <input type="text" name="matriculation_number" id="matriculation_number" value="{{ old('matriculation_number') }}">
+                <input type="text" name="matriculation_number" id="matriculation_number" value="{{ old('matriculation_number', $student->matriculation_number) }}">
                 @error('matriculation_number')
                     <span class="form-error">{!! __($message) !!}</span>
                 @enderror
@@ -55,6 +56,7 @@
 
         </div>
 
+        
         <div class="form-row cols-2">
 
             <div class="form-group">
@@ -64,7 +66,7 @@
 
                     @foreach ($courses as $course)
                         <option value="{{ $course->id }}"
-                            {{ old('main_course_id') == $course->id ? 'selected' : '' }}>
+                            {{ old('main_course_id', $student->main_course_id) == $course->id ? 'selected' : '' }}>
                             {{ $course->shortname }} - {{ $course->name }}
                         </option>
                     @endforeach
@@ -75,7 +77,9 @@
                 @enderror
             </div>
 
-            {{-- Alle Kurse --}}
+            @php
+                $selectedCourses = old('course_ids', $student->courses->pluck('id')->all());
+            @endphp
 
             <div class="form-group">
                 <p><strong>{{ __('Belegte Kurse') }}:</strong></p>
@@ -86,10 +90,10 @@
                             type="checkbox"
                             name="course_ids[]"
                             value="{{ $course->id }}"
-                            {{ collect(old('course_ids', []))->contains($course->id) ? 'checked' : '' }}
+                            {{ in_array($course->id, $selectedCourses, true) ? 'checked' : '' }}
                         >
                         {{ $course->shortname }} – {{ $course->name }}
-                    </label><br>
+                    </label>
                 @endforeach
 
                 @error('course_ids')

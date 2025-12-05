@@ -14,7 +14,7 @@ class HomeController extends Controller
         /**
          * Ruft die View home.blade.php auf und übergibt Variableninhalte
          */
-        return view('/home', [
+        return view('home', [
             'headline' => $headline,
             'today'    => $today
         ]);
@@ -27,7 +27,7 @@ class HomeController extends Controller
         /**
          * Ruft die View home.blade.php auf und übergibt Variableninhalte
          */
-        return view('/about', [
+        return view('about', [
             'headline' => $headline,
         ]);
     }
