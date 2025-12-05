@@ -21,11 +21,15 @@
         <div>
             <h3>Belegte Kurse</h3>
             <p><strong>Hauptkurs:</strong> {{ $student->mainCourse?->name }}</p>
+            <p><strong>Anzahl der Teilnehmer:</strong> {{ $student->mainCourse?->count() }}</p>
             <p>
                 <strong>Alle Kurse:</strong><br>
                 {{-- {{ $student->courses->pluck('shortname')->join(', ') }} --}}
-                @foreach ($student->courses as $course)
-                    <span class="badge">{{ $course->shortname }}</span>
+                @foreach ($student->courses as $index => $course)
+                <span class="badge">{{ $course->shortname }}</span>
+                @if ($index < $student->courses->count() - 1)
+                <span>, </span>
+                @endif
                 @endforeach
             </p>
         </div>

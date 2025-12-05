@@ -13,7 +13,7 @@ class StudentsController extends Controller
         // generiert eine DB-Abfrage z.B. SELECT * FROM students ORDER BY lastname
         // with('course') sorgt für "Eager Loading" bei verknüpften Abfragen
         // und umgeht so das N+1-Problem
-        $students = Student::with(['mainCourse', 'courses'])->orderBy('lastname')->paginate(1);
+    $students = Student::with(['mainCourse', 'courses'])->orderBy('lastname')->paginate(10);
 
         return view('students.index', compact('students'));
     }
